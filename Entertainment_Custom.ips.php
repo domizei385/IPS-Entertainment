@@ -1,10 +1,10 @@
 <?
 	include_once "Entertainment.ips.php";
-	include_once "Entertainment_InterfaceWinLIRC.ips.php";
+	//include_once "Entertainment_InterfaceWinLIRC.ips.php";
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function Entertainment_Before_SendData($Parameters) {
-		if ($Parameters[0]==c_Comm_WinLIRC and $Parameters[1]=='yamahareceiver') {
+		/*if ($Parameters[0]==c_Comm_WinLIRC and $Parameters[1]=='yamahareceiver') {
 			$Button      = $Parameters[2];
 
 			// Special Handling for Muting of YamahaReceiver: Use InputSelector Phone for Muting,
@@ -55,7 +55,7 @@
 				}
 				return false; // Abort current Processing
 			}
-		}
+		}*/
 		return true;
 	}
 
