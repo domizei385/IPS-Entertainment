@@ -9,6 +9,7 @@
 	include_once "Entertainment_Device.ips.php";
 	include_once "Entertainment_Source.ips.php";
 	include_once "Entertainment_RemoteControl.ips.php";
+	include_once "Entertainment_DeviceSemaphore.ips.php";
 
 
 /*
