@@ -2,13 +2,14 @@
 	include_once "IPSLogger.ips.php";
 	
 	define("sem_ENTERTAINMENT", "EntertainmentDeviceChange");
-	define("sem_YAMAHA", "SemaphoreYamaha");
-	define("sem_NETIO", "SemaphoreNetio");
-	define("sem_IPSVARS", "IPSVariables");
 	
 	function executeGuarded($function, $name, $time = 1000) {
 		if(IPS_SemaphoreEnter($name, $time)) {
-			$function();
+			try {
+				$function();
+			}
+			catch (Exception $e) {
+			}
 			IPS_SemaphoreLeave($name);
 			return true;
 		}
