@@ -6,7 +6,7 @@
 	$ProgramPath            = 'Program.Entertainment';
 
 	$WebfrontPath           = 'WebFront.Entertainment';
-	$WebFrontConfigId       = 57215;
+	$WebFrontConfigId       = 57374;
 	$WebFrontTabPaneOrderId = 20;
 	$WebFrontTabPaneName    = '';
 
@@ -26,27 +26,24 @@
 	// Add Scripts
 	echo "--- Add Scripts ------------------------------------------------------------------------ \n";
 	IPS_SetParent($IPS_SELF, $CategoryIdControl);
-	CreateScript('Entertainment',                  'Entertainment.ips.php', $CategoryIdControl, 10);
-	CreateScript('Entertainment_Constants',        'Entertainment_Constants.ips.php', $CategoryIdControl,20);
-	CreateScript('Entertainment_Configuration',    'Entertainment_Configuration.ips.php', $CategoryIdControl,30);
-	CreateScript('Entertainment_Control',  		  'Entertainment_Control.ips.php', $CategoryIdControl,40);
-	CreateScript('Entertainment_Room',             'Entertainment_Room.ips.php', $CategoryIdControl,50);
-	CreateScript('Entertainment_Power',            'Entertainment_Power.ips.php', $CategoryIdControl,60);
-	CreateScript('Entertainment_Source',           'Entertainment_Source.ips.php', $CategoryIdControl,70);
-	CreateScript('Entertainment_Device',           'Entertainment_Device.ips.php', $CategoryIdControl,80);
-	CreateScript('Entertainment_RemoteControl',    'Entertainment_RemoteControl.ips.php', $CategoryIdControl,90);
-	CreateScript('Entertainment_Communication',    'Entertainment_Communication.ips.php', $CategoryIdControl,100);
-	CreateScript('Entertainment_Custom',           'Entertainment_Custom.ips.php', $CategoryIdControl,110);
-	CreateScript('Entertainment_Connect',  		  'Entertainment_Connect.ips.php', $CategoryIdControl,120);
-	$ScriptIdAllOff      = CreateScript('Entertainment_AllRoomesOff',     'Entertainment_AllRoomesOff.ips.php', $CategoryIdControl,130);
-	$ScriptIdConnASyn    = CreateScript('Entertainment_ConnectAsynchron', 'Entertainment_ConnectAsynchron.ips.php', $CategoryIdControl,140);
-	$ScriptIdPostInstall = CreateScript('Entertainment_PostInstallation', 'Entertainment_PostInstallation.ips.php', $CategoryIdControl,0);
+   CreateScript('Entertainment',                  'Entertainment.ips.php', $CategoryIdControl, 10);
+   CreateScript('Entertainment_Constants',        'Entertainment_Constants.ips.php', $CategoryIdControl,20);
+   CreateScript('Entertainment_Configuration',    'Entertainment_Configuration.ips.php', $CategoryIdControl,30);
+   CreateScript('Entertainment_Control',  		  'Entertainment_Control.ips.php', $CategoryIdControl,40);
+   CreateScript('Entertainment_Room',             'Entertainment_Room.ips.php', $CategoryIdControl,50);
+   CreateScript('Entertainment_Power',            'Entertainment_Power.ips.php', $CategoryIdControl,60);
+   CreateScript('Entertainment_Source',           'Entertainment_Source.ips.php', $CategoryIdControl,70);
+   CreateScript('Entertainment_Device',           'Entertainment_Device.ips.php', $CategoryIdControl,80);
+   CreateScript('Entertainment_RemoteControl',    'Entertainment_RemoteControl.ips.php', $CategoryIdControl,90);
+   CreateScript('Entertainment_Communication',    'Entertainment_Communication.ips.php', $CategoryIdControl,100);
+   CreateScript('Entertainment_Custom',           'Entertainment_Custom.ips.php', $CategoryIdControl,110);
+   CreateScript('Entertainment_Connect',  		  'Entertainment_Connect.ips.php', $CategoryIdControl,120);
+   $ScriptIdAllOff      = CreateScript('Entertainment_AllRoomesOff',     'Entertainment_AllRoomesOff.ips.php', $CategoryIdControl,130);
+   $ScriptIdConnASyn    = CreateScript('Entertainment_ConnectAsynchron', 'Entertainment_ConnectAsynchron.ips.php', $CategoryIdControl,140);
+   $ScriptIdPostInstall = CreateScript('Entertainment_PostInstallation', 'Entertainment_PostInstallation.ips.php', $CategoryIdControl,0);
 
-	$ScriptIdInterface = CreateScript('Entertainment_Interface',  'Entertainment_Interface.ips.php', $CategoryIdInterfaces,10);
-	CreateScript('Entertainment_InterfaceOnkyo',    'Entertainment_InterfaceOnkyo.ips.php', $CategoryIdInterfaces,20);
-	CreateScript('Entertainment_InterfaceWinLIRC',  'Entertainment_InterfaceWinLIRC.ips.php', $CategoryIdInterfaces,30);
-	CreateScript('Entertainment_InterfaceNetPlayer','Entertainment_InterfaceNetPlayer.ips.php', $CategoryIdInterfaces,40);
-	CreateScript('Entertainment_InterfaceYamaha',   'Entertainment_InterfaceYamaha.ips.php', $CategoryIdInterfaces,50);
+   $ScriptIdInterface = CreateScript('Entertainment_Interface',  'Entertainment_Interface.ips.php', $CategoryIdInterfaces,10);
+   CreateScript('Entertainment_InterfaceYamaha',    'Entertainment_InterfaceYamaha.ips.php', $CategoryIdInterfaces,20);
 
 	// Generate Roomes and Controls
 	echo "--- Create Roomes and Controls ---------------------------------------------------------\n";
@@ -70,23 +67,23 @@
 		$DeviceId     = CreateCategory($DeviceName, $CategoryIdDevices, $DeviceOrder);
 		$ControlOrder = 10;
 		foreach($DeviceProperties as $ControlType => $ControlData) {
-			CreateControl ($ControlType, $ControlData, $DeviceId, $ScriptIdInterface, $ControlOrder);
-			$ControlOrder = $ControlOrder + 10;
+         CreateControl ($ControlType, $ControlData, $DeviceId, $ScriptIdInterface, $ControlOrder);
+         $ControlOrder = $ControlOrder + 10;
 		}
-		$DeviceOrder = $DeviceOrder + 100;
-			// Process Installation Script of Device
-		if (array_key_exists(c_Property_Installation, $DeviceProperties)) {
-			$InstallScript = $DeviceProperties[c_Property_Installation];
+      $DeviceOrder = $DeviceOrder + 100;
+      // Process Installation Script of Device
+      if (array_key_exists(c_Property_Installation, $DeviceProperties)) {
+         $InstallScript = $DeviceProperties[c_Property_Installation];
 			try {
-				echo 'EXECUTE Device specific Installation Procedure: '.$InstallScript."\n";
+			   echo 'EXECUTE Device specific Installation Procedure: '.$InstallScript."\n";
 				include_once $InstallScript;
 				$Function       = new ReflectionFunction('Installation');
 				$Function->invoke($DeviceId);
 			} catch (Exception $e) {
-				echo 'Error Executing Function '.$FunctionName.':'.$e->getMessage()."\n";
-				exit;
+		     	echo 'Error Executing Function '.$FunctionName.':'.$e->getMessage()."\n";
+		     	exit;
 			}
-		}
+      }
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------------
@@ -111,9 +108,9 @@
 	// Link to Roomes and Room Controls
 	$RoomOrder = 1;
 	foreach($RoomData as $RoomName => $RoomProperties) {
-		$RoomId          = IPS_GetCategoryIDByName($RoomName, $CategoryIdRoomes);
+	   $RoomId          = IPS_GetCategoryIDByName($RoomName, $CategoryIdRoomes);
 
-		// Create Link to Room
+	   // Create Link to Room
 		//CreateLink($RoomName,  $RoomId,  $ID_CategoryWebFrontRoomes, $Order);
 		$ID_RoomiPhone   = CreateCategory($RoomName, $iPhoneId,    $RoomOrder);
 		$ID_RoomWebfront = CreateCategory($RoomName, $WebFrontId,  $RoomOrder);
@@ -121,7 +118,7 @@
 		$DeviceOrder     = 10;
 		CreateWFCItemCategory  ($WebFrontConfigId, 'EntertainmentTP_'.$RoomOrder,'EntertainmentTP', $RoomOrder,$RoomName, '', $ID_RoomWebfront /*BaseId*/, 'false' /*BarBottomVisible*/);
 		foreach($RoomProperties as $ControlType => $ControlData) {
-			$ControlName = $ControlData[c_Property_Name];
+		   $ControlName = $ControlData[c_Property_Name];
 			$SwitchId = IPS_GetVariableIDByName($ControlName, $RoomId);
 
 			// Create Link to RoomPower Switch
@@ -204,11 +201,19 @@
 				foreach ($RoomData as $SourceIdx => $SourceIdxData) {
 					if (is_array($SourceIdxData)) {
 						foreach ($SourceIdxData as $SourceType => $SourceTypeData) {
-							if ($SourceType==c_Property_Input or $SourceType==c_Property_Switch or $SourceType==c_Property_Output) {
-								$DeviceNames = $SourceTypeData[c_Property_Device];
-								if(!is_array($DeviceNames)) {
-									$DeviceNames = array($DeviceNames);
+							if ($SourceType == c_Property_Input or $SourceType == c_Property_Switch or $SourceType == c_Property_Output) {
+								
+								// ensure compatibilty to older or simpler configurations
+								if(isset($SourceTypeData[c_Property_Device])) {
+									$SourceTypeData = array($SourceTypeData);
 								}
+								
+								$DeviceNames = array();
+								foreach($SourceTypeData as $SourceTypeDataX) {
+									$DeviceName = $SourceTypeDataX[c_Property_Device];
+									$DeviceNames[] = $DeviceName;
+								}
+								
 								foreach($DeviceNames as $DeviceName) {
 									$DeviceControls = $DeviceConfig[$DeviceName];
 									if (array_key_exists($ControlType, $DeviceControls)) {
@@ -257,8 +262,8 @@
 				$Profile = 'Entertainment_Volume'.$ParentId;
 				$MinValue = get_DevicePropertybyParent($ParentId, $ControlType, c_Property_MinValue);
 				$MaxValue = get_DevicePropertybyParent($ParentId, $ControlType, c_Property_MaxValue);
-				CreateProfile_Volume($Profile, $MinValue, $MaxValue);
-				$ControlId  = CreateVariable($Name,  1 /*Integer*/, $ParentId, $Order, $Profile, $ActionScriptId, 0, 'Intensity');
+				CreateProfile_Volume($Profile, $MinValue, $MaxValue, 2);
+				$ControlId  = CreateVariable($Name,  2 /*Float*/, $ParentId, $Order, $Profile, $ActionScriptId, 0, 'Intensity');
 				SetValue($ControlId, $MinValue);
 				break;
 			case c_Control_Mode:
@@ -300,18 +305,18 @@
 	}
 
    // ------------------------------------------------------------------------------------------------
-	function CreateProfile_Volume ($Name, $MinValue, $MaxValue) {
-		@IPS_DeleteVariableProfile($Name);
-		IPS_CreateVariableProfile($Name, 1);
+	function CreateProfile_Volume ($Name, $MinValue, $MaxValue, $Type = 1) {
+	   @IPS_DeleteVariableProfile($Name);
+		IPS_CreateVariableProfile($Name, $Type);
 		IPS_SetVariableProfileText($Name, "", "%");
 		IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, 1);
-		IPS_SetVariableProfileDigits($Name, 0);
+		IPS_SetVariableProfileDigits($Name, 1);
 		IPS_SetVariableProfileIcon($Name, "");
 	}
 
    // ------------------------------------------------------------------------------------------------
 	function CreateProfile_Names ($Name, $Names) {
-		@IPS_DeleteVariableProfile($Name);
+	   @IPS_DeleteVariableProfile($Name);
 		IPS_CreateVariableProfile($Name, 1);
 		IPS_SetVariableProfileText($Name, "", "");
 		IPS_SetVariableProfileValues($Name, 0, 0, 0);
@@ -324,13 +329,13 @@
 
    // ------------------------------------------------------------------------------------------------
 	function CreateProfile_Source ($Name, $RoomId) {
-		@IPS_DeleteVariableProfile($Name);
+	   @IPS_DeleteVariableProfile($Name);
 		IPS_CreateVariableProfile($Name, 1);
 		IPS_SetVariableProfileText($Name, "", "");
 		IPS_SetVariableProfileValues($Name, 0, 0, 0);
 		IPS_SetVariableProfileDigits($Name, 0);
 		IPS_SetVariableProfileIcon($Name, "");
-		$SourceData = get_SourceConfiguration();
+	   $SourceData = get_SourceConfiguration();
 		$SourceItems = $SourceData[IPS_GetName($RoomId)];
 		foreach($SourceItems as $SourceId => $SourceData) {
 			IPS_SetVariableProfileAssociation($Name, $SourceId, $SourceData[c_Property_Name], "", 0xaaaaaa);
