@@ -74,7 +74,7 @@
 		foreach ($RoomIds as $RoomId) {
 			$RoomDeviceNames = get_DeviceNamesByRoomId($RoomId);
 			foreach ($RoomDeviceNames as $RoomDeviceName) {
-			   if ($RoomDeviceName==$DeviceName) {
+			   if ($RoomDeviceName == $DeviceName) {
 					$ControlId = get_ControlIdByRoomId($RoomId,get_ControlType($DeviceControlId));
 					if ($ControlId !== false) {
 						$RoomControlIds[] = $ControlId;
@@ -143,7 +143,7 @@
 		} else if ($CategoryId == c_ID_Devices) {
 			$DeviceData = get_DeviceConfiguration();
 			foreach($DeviceData[$ParentName] as $ControlType => $ControlProperties) {
-			   if ($ControlProperties[c_Property_Name] == $Name) {
+				if ($ControlProperties[c_Property_Name] == $Name) {
 					return $ControlType;
 				}
 			}
@@ -158,10 +158,10 @@
 		$RoomName = IPS_GetName($RoomId);
 		$RoomData = get_RoomConfiguration();
 		$SourceName = $RoomData[$RoomName][c_Control_Source][c_Property_Name];
-
+		
 		$ChildrenIds = IPS_GetChildrenIDs($RoomId);
 		foreach($ChildrenIds as $ChildrenIdx => $ChildrenId) {
-		   if (IPS_GetName($ChildrenId) == $SourceName) {
+			if (IPS_GetName($ChildrenId) == $SourceName) {
 				return GetValue($ChildrenId);
 			}
 		}
@@ -188,9 +188,7 @@
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function get_ControlIdByDeviceName($DeviceName, $ControlType, $ErrorOnNotFound=true) {
-
 		$ControlName = get_ControlNameByDeviceName($DeviceName, $ControlType, $ErrorOnNotFound);
-
 		if ($ControlName !== false) { // Device has Control
 			$Ids = IPS_GetChildrenIDs(c_ID_Devices);
 			$DeviceId=false;
@@ -253,9 +251,9 @@
 	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
-	function get_DeviceNamesByRoomId($RoomId, $SourceIdx=-1, $SourceDeviceTypes=array(c_Property_Input, c_Property_Switch, c_Property_Output)) {
+	function get_DeviceNamesByRoomId($RoomId, $SourceIdx=-1, $SourceDeviceTypes = array(c_Property_Input, c_Property_Switch, c_Property_Output)) {
 		$SourceConf     = get_SourceConfiguration();
-		if ($SourceIdx==-1) {
+		if ($SourceIdx == -1) {
 			$SourceId       = get_ControlIdByRoomId($RoomId, c_Control_Source);
 			$SourceIdx      = GetValue($SourceId);
 		}
@@ -263,12 +261,14 @@
 		$DeviceNames    = array();
 		foreach ($SourceDeviceTypes as $SourceDeviceType) {
 			if (array_key_exists($SourceDeviceType, $SourceConfRoom)) {
-				$DeviceName = $SourceConfRoom[$SourceDeviceType][c_Property_Device];
-				if(is_array($DeviceName)) {
-					foreach($DeviceName as $DeviceN) {
-						$DeviceNames[$DeviceN] = $DeviceN;
-					}
-				} else {
+				$SourceDevices = $SourceConfRoom[$SourceDeviceType];
+				
+				// wrap in array for downward compatibility of older configurations
+				if(isset($SourceDevices[c_Property_Device])) {
+					$SourceDevices = array($SourceDevices);
+				}
+				foreach($SourceDevices as $SourceDevice) {
+					$DeviceName = $SourceDevice[c_Property_Device];
 					$DeviceNames[$DeviceName] = $DeviceName;
 				}
 			}
@@ -276,6 +276,17 @@
 		return $DeviceNames;
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------------
+	function get_SourceDeviceTypeArray($DeviceList) {
+		$DeviceTypes = array();
+		if(isset($DeviceList[c_Property_Device])) {
+			$DeviceList = array($DeviceList);
+		}
+		foreach($DeviceList as $Device) {
+			array_push($DeviceTypes, $Device[c_Property_Device]);
+		}
+		return $DeviceTypes;
+	}
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function get_SourceDeviceTypes($RoomId, $SourceIdx) {
@@ -283,13 +294,13 @@
 		$SourceConfRoom = $SourceConf[IPS_GetName($RoomId)][$SourceIdx];
 		$DeviceTypes = array();
 		if (array_key_exists(c_Property_Input, $SourceConfRoom)) {
-			$DeviceTypes[c_Property_Input] = $SourceConfRoom[c_Property_Input][c_Property_Device];
+			$DeviceTypes[c_Property_Input] = get_SourceDeviceTypeArray($SourceConfRoom[c_Property_Input]);
 		}
 		if (array_key_exists(c_Property_Switch, $SourceConfRoom)) {
-			$DeviceTypes[c_Property_Switch] = $SourceConfRoom[c_Property_Switch][c_Property_Device];
+			$DeviceTypes[c_Property_Switch] = get_SourceDeviceTypeArray($SourceConfRoom[c_Property_Switch]);
 		}
 		if (array_key_exists(c_Property_Output, $SourceConfRoom)) {
-			$DeviceTypes[c_Property_Output] = $SourceConfRoom[c_Property_Output][c_Property_Device];
+			$DeviceTypes[c_Property_Output] = get_SourceDeviceTypeArray($SourceConfRoom[c_Property_Output]);
 		}
 		return $DeviceTypes;
 	}
@@ -323,13 +334,19 @@
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function get_RoomIdByOutputDevice($DeviceName) {
 		$SourceConf = get_SourceConfiguration();
-		foreach ($SourceConf as $RoomName=>$RoomSources) {
+		foreach ($SourceConf as $RoomName => $RoomSources) {
 			$RoomId     = get_RoomId($RoomName);
 			$SourceIdx  = get_SourceIdxByRoomId($RoomId);
 			$RoomSource = $RoomSources[$SourceIdx];
 			if (array_key_exists(c_Property_Output, $RoomSource)) {
-				$OutputName= $RoomSource[c_Property_Output][c_Property_Device];
-				if ($OutputName==$DeviceName) {
+				$OutputDevices = $RoomSource[c_Property_Output];
+				
+				// wrap in array for downward compatibility of older configurations
+				if(isset($OutputDevices[c_Property_Device])) {
+					$OutputDevices = array($OutputDevices);
+				}
+				$OutputName = $OutputDevices[0][c_Property_Device];
+				if ($OutputName == $DeviceName) {
 					return $RoomId;
 				}
 			}
@@ -344,13 +361,13 @@
 		foreach ($SourceConfig as $RoomName=>$RoomSources) {
 			$RoomId = get_RoomId($RoomName);
 			$CurrentIdx  = get_SourceIdxByRoomId($RoomId);
-			foreach ($RoomSources as $SourceIdx=>$SourceData) {
+			foreach ($RoomSources as $SourceIdx => $SourceData) {
 				$DeviceNames = get_DeviceNamesByRoomId($RoomId, $SourceIdx, array(c_Property_Output));
 				if (in_array($DeviceName, $DeviceNames)) {
 					if (!array_key_exists($RoomId, $SourceList)) {
 						$SourceList[$RoomId] = $SourceIdx;
 					}
-					if ($CurrentIdx==$SourceIdx) {
+					if ($CurrentIdx == $SourceIdx) {
 						$SourceList[$RoomId] = $SourceIdx;
 						break;
 					}
