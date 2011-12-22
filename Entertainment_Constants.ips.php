@@ -1,8 +1,8 @@
 <?
-	define ("c_ID_Devices",                14043);
-	define ("c_ID_Roomes",                 32592);
-	define ("c_ID_WebFrontRoomes",         29454);
-	define ("c_ID_ConnectAsynchronScript", 38198);
+	define ("c_ID_Devices",                24429);
+	define ("c_ID_Roomes",                 27055);
+	define ("c_ID_WebFrontRoomes",         24189);
+	define ("c_ID_ConnectAsynchronScript", 31125);
 
 	// Control Definition
 	define ("c_Control_RoomPower",					"RoomPower");
@@ -87,9 +87,13 @@
 	define ("c_MessageType_Info",   					"Info");
 	define ("c_MessageType_Action",   				"Action");
 
-	define ("c_Value_Toggle",   						"Toggle");
+	define ("c_Value_Toggle",   					"Toggle");
 
 	define ("c_RemoteControlHtmlPrefix",    		'<iframe frameborder="0" width="100%" ');
 	define ("c_RemoteControlHtmlSuffix",    		'</iframe>');
+	
+	// Power Switch Devices
+	define ("c_Comm_NetIO230",   				"DeviceNetIO230");
+	define ("c_Comm_HomeMaticSwitch",   		"DeviceHomeMaticSwitch");
 
 ?>
