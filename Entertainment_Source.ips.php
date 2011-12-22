@@ -15,20 +15,20 @@
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function Entertainment_SyncRoomControls($RoomId) {
 		$RoomName = IPS_GetName($RoomId);
-	   $RoomConfig = get_RoomConfiguration();
-	   $ControlTypes = $RoomConfig[$RoomName];
-	   foreach ($ControlTypes as $ControlType=>$ControlData) {
+		$RoomConfig = get_RoomConfiguration();
+		$ControlTypes = $RoomConfig[$RoomName];
+		foreach ($ControlTypes as $ControlType=>$ControlData) {
 			if ($ControlType==c_Control_Muting or
 				 $ControlType==c_Control_Volume or
 				 $ControlType==c_Control_Program or
-			    $ControlType==c_Control_RemoteVolume or
-			    $ControlType==c_Control_iRemoteVolume or
-			    $ControlType==c_Control_RemoteSource or
-			    $ControlType==c_Control_iRemoteSource or
-			    $ControlType==c_Control_Mode) {
+				 $ControlType==c_Control_RemoteVolume or
+				 $ControlType==c_Control_iRemoteVolume or
+				 $ControlType==c_Control_RemoteSource or
+				 $ControlType==c_Control_iRemoteSource or
+				 $ControlType==c_Control_Mode) {
 				$RoomControlId   = get_ControlIdByRoomId($RoomId, $ControlType);
 				$DeviceControlId = get_DeviceControlIdByRoomControlId($RoomControlId);
-
+				
 				if ($DeviceControlId===false and $ControlType==c_Control_iRemoteVolume) {
 					$DeviceControlId = get_DeviceControlIdByRoomControlId($RoomControlId, c_Control_RemoteVolume);
 				} else if ($DeviceControlId===false and $ControlType==c_Control_iRemoteSource) {
@@ -36,13 +36,12 @@
 				} else {
 				  //
 				}
-
+				
 				IPSLogger_Trc(__file__,'Sync Room="'.$RoomName.'", Control="'.$ControlType.'", DeviceControlId='.$DeviceControlId);
 				if ($DeviceControlId!==false) {
 					SetValue($RoomControlId, GetValue($DeviceControlId));
-
 				} else {
-				   IPSLogger_Err(__file__, 'DeviceControl of "'.$RoomName.'" of type "'.$ControlType.'" could NOT be found for RoomControlId='.$RoomControlId);
+					IPSLogger_Err(__file__, 'DeviceControl of "'.$RoomName.'" of type "'.$ControlType.'" could NOT be found for RoomControlId='.$RoomControlId);
 				}
 			}
 	   }
