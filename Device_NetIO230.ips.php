@@ -7,6 +7,7 @@ define("v_USERNAME", "Username");
 define("v_PASSWORD", "Password");
 define("v_IP", "IP");
 define("v_NETIO_SETTINGS", "Settings");
+define("MAX_RETRIES", 3);
 
 /**
  * Extracts and returns the login credentials for the given netIO230 device from variables with the names defined in v_USERNAME and v_PASSWORD.
@@ -71,23 +72,39 @@ function NetIO_setPortStatus($portID, $status) {
 function loginAndSendCommands($netIORegisterVariableID, $parameter) {
 	$settings = readSettingsFromCategory($netIORegisterVariableID);
 	
+	// check if device is available at port 80
+	$resp = @fsockopen($settings[v_IP], 80, $errno, $errstr, 1);
+	if(!$resp) {
+		IPSLogger_Wrn(__file__, "No response from NetIO device @ ".$settings[v_IP]);
+		return false;
+	}
+	
 	$basePath = "http://".$settings[v_IP]."/tgi/control.tgi?";
 	
-	$loginURL = $basePath."login=p:".$settings[v_USERNAME].":".$settings[v_PASSWORD];
-	$response = Sys_GetURLContent($loginURL);
-	$result = parseResponse($response);
-	
-	$parameterURL = $basePath."p=".$parameter;
-	$response = Sys_GetURLContent($parameterURL);
-	$result &= parseResponse($response, $netIORegisterVariableID);
-	
-	$logoutURL = $basePath."quit=quit";
-	$response = Sys_GetURLContent($logoutURL);
-	$result &= parseResponse($response);
+	$result = false;
+	$retries = 0;
+	while($result == false && $retries < MAX_RETRIES) {
+		$loginURL = $basePath."login=p:".$settings[v_USERNAME].":".$settings[v_PASSWORD];
+		$response = Sys_GetURLContent($loginURL);
+		$result = parseResponse($response);
+		
+		$parameterURL = $basePath."p=".$parameter;
+		$response = Sys_GetURLContent($parameterURL);
+		$result &= parseResponse($response, $netIORegisterVariableID);
+		
+		$logoutURL = $basePath."quit=quit";
+		$response = Sys_GetURLContent($logoutURL);
+		$result &= parseResponse($response);
+		
+		if(!$result) {
+			usleep(500000); // 500ms
+		}
+	}
 	return $result;
 }
 
 function parseResponse($text, $categoryID = null) {
+	//IPSLogger_Wrn(__file__, $text);
 	$webmode = false;
 	if(strstr($text, "<html>")) {
 		$webmode = true;
