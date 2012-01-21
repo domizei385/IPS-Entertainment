@@ -5,6 +5,8 @@
 	define("cmd_PREFIX", "PREFIX");
 	define("cmd_SUFFIX", "SUFFIX");
 	define("MAPPING_FUNCTION", "__function__");
+	define("Message_Command_Paramter_Zone", '(Command=%s, Param=%s, Zone=%s) => %s');
+	define("Message_Commands_Execution", 'Executing %d command%s took %.4f seconds.');
 
 	function Yamaha_SendData_FPUTS($ip, $command, $zone = "Main_Zone", $type = "PUT") {
 		$msg  = "<YAMAHA_AV cmd=\"$type\">";
@@ -64,6 +66,7 @@
 		$DeviceProperties = $Devices[$Parameters[0]];
 		$ip = $DeviceProperties[c_Property_IPAddress];
 		
+		$timeStart = microtime(true);
 		foreach($parameterSet as $cmd => $parameter) {
 			$command = $cmdMapping[$cmd][cmd_PREFIX];
 			
@@ -80,9 +83,15 @@
 			}
 			$command .= $cmdMapping[$cmd][cmd_SUFFIX];
 			
-			IPSLogger_Com(__file__, '(Command='.$command.', Param='.$parameter.', Zone='.$zone.')');
+			
+			IPSLogger_Com(__file__, sprintf(Message_Command_Paramter_Zone, $cmd, $parameter, $zone, $command));
 			Yamaha_SendData_FPUTS($ip, $command, $zone);
 		}
+		$timeEnd = microtime(true);
+		$elapsedSeconds = $timeEnd - $timeStart;
+		$totalCommands = count($parameterSet);
+		
+		IPSLogger_Com(__file__, sprintf(Message_Commands_Execution, $totalCommands, $totalCommands <> 1 ? 's' : '', $elapsedSeconds));
 	}
 	
 	function post_request($url, $data, $referer = '') {
@@ -98,7 +107,7 @@
 		$path = $url['path'];
 		
 		// open a socket connection on port 80 - timeout: 30 sec
-		$fp = fsockopen($host, 80, $errno, $errstr, 30);
+		$fp = fsockopen($host, 80, $errno, $errstr, 5);
 		
 		if ($fp) {
 			fputs($fp, "POST $path HTTP/1.1\r\n");
