@@ -134,10 +134,10 @@
 				CreateLink($ControlName,  $SwitchId,  $ID_RoomiPhone,                       $DeviceOrder);
 				CreateLink($ControlName,  $SwitchId,  $ID_RoomWebfront,                     $DeviceOrder);
 
-			} else if ($ControlType==c_Control_RemoteSource or $ControlType==c_Control_RemoteVolume) {
+			} else if ($ControlType == c_Control_RemoteSource or $ControlType == c_Control_RemoteVolume) {
 				CreateLink($ControlName,  $SwitchId,  $ID_RoomWebfront,                     $DeviceOrder);
 
-			} else if ($ControlType==c_Control_iRemoteSource or $ControlType==c_Control_iRemoteVolume) {
+			} else if ($ControlType == c_Control_iRemoteSource or $ControlType == c_Control_iRemoteVolume) {
 				CreateLink($ControlName,  $SwitchId,  $ID_RoomiPhone,                       $DeviceOrder);
 
 			} else {
@@ -179,7 +179,7 @@
 	// Post Installation
 	// -----------------
 	IPS_RunScript($ScriptIdPostInstall);
-	echo "--- Installation successfully finised !!! ----------------------------------------------\n";
+	echo "--- Installation successfully finished !!! ----------------------------------------------\n";
 
 
 

@@ -19,12 +19,12 @@
 	
 	function Entertainment_requestSemaphore($name = sem_ENTERTAINMENT, $time = 7000) {
 		$result = IPS_SemaphoreEnter($name, $time);
-		IPSLogger_Trc(__file__, "Requesting semaphore (".$name."): ".($result ? "SUCCESS" : "FAILED").($name == "" ? "" : " from ".$name));
+		//IPSLogger_Trc(__file__, "Requesting semaphore (".$name."): ".($result ? "SUCCESS" : "FAILED").($name == "" ? "" : " from ".$name));
 		return $result;
 	}
 	
 	function Entertainment_freeSemaphore($name = sem_ENTERTAINMENT) {
-		IPSLogger_Trc(__file__, "Freeing Semaphore (".$name.")");
+		//IPSLogger_Trc(__file__, "Freeing Semaphore (".$name.")");
 		return IPS_SemaphoreLeave($name);
 	}
 ?>

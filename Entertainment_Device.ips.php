@@ -26,26 +26,25 @@
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function Entertainment_SetProgramNext($Id, $MessageType=c_MessageType_Action) {
-	   $Value = GetValue($Id) + 1;
-	   $MaxValue = get_MaxValueByControlId($Id);
-	   if ($Value > $MaxValue-1) {
-	      $Value = 0;
-	   }
-	   Entertainment_SetProgram($Id, $Value, $MessageType);
+		$Value = GetValue($Id) + 1;
+		$MaxValue = get_MaxValueByControlId($Id);
+		if ($Value > $MaxValue - 1) {
+			$Value = 0;
+		}
+		Entertainment_SetProgram($Id, $Value, $MessageType);
 	}
-
 
 	// ---------------------------------------------------------------------------------------------------------------------------
 	function Entertainment_SetProgram($Id, $Value, $MessageType=c_MessageType_Action) {
-	   $DeviceName = IPS_GetName(IPS_GetParent($Id));
-		if (!isDevicePoweredOnByDeviceName($DeviceName)) {
-		  return;
+		$DeviceName = IPS_GetName(IPS_GetParent($Id));
+		if(!isDevicePoweredOnByDeviceName($DeviceName)) {
+			return;
 		}
-		if (GetValue($Id) <> $Value) {
+		if(GetValue($Id) <> $Value) {
 			IPSLogger_Inf(__file__, "Set Program '$Value' for Device '$DeviceName' (MessageType=$MessageType)");
 			SetValue($Id, $Value);
-		  	Entertainment_SendDataByDeviceName($DeviceName, c_Control_Program,
-			  												array(c_Property_CommPrg), $MessageType);
+			Entertainment_SendDataByDeviceName($DeviceName, c_Control_Program,
+												array(c_Property_CommPrg), $MessageType);
 			Entertainment_SetRoomControlByDeviceControlId($Id, $Value);
 			//Entertainment_RefreshRemoteControlByDeviceName($DeviceName);
 		}

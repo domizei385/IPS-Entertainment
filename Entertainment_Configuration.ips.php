@@ -37,11 +37,11 @@
 			),
 			c_Comm_HomeMaticSwitch => array (
 				c_Property_Script				=> 'Entertainment_InterfaceHomeMaticSwitch.ips.php',
-				c_Property_FunctionSend 		=> 'TogglePower',
+				c_Property_FunctionSend 		=> 'HomeMaticSwitch_TogglePower',
 			),
 			c_Comm_NetIO230 => array (
 				c_Property_Script				=> 'Entertainment_InterfaceNetIO230.ips.php',
-				c_Property_FunctionSend 		=> 'TogglePower',
+				c_Property_FunctionSend 		=> 'NetIO230_TogglePower',
 			),
 		);
 	}
@@ -59,7 +59,7 @@
 				// c_Control_RemoteVolume		=> array(c_Property_Name 	=> 'Volume Control'),
 				// c_Control_iRemoteVolume		=> array(c_Property_Name 	=> 'Volume iPhone'),
 				c_Control_Source 			=> array(c_Property_Name 	=> 'Source'),
-				//c_Control_RemoteSource		=> array(c_Property_Name 	=> 'Source Control'),
+				c_Control_RemoteSource		=> array(c_Property_Name 	=> 'Source Control'),
 				//c_Control_iRemoteSource		=> array(c_Property_Name 	=> 'Remote iPhone'),
 			),
 			// -------------------------------------------------------------------------------------------------------
@@ -98,6 +98,10 @@
 					c_Property_Name    		=> 'Volume Control',
 					c_Property_Names       	=> array('src="../user/Entertainment/Remote_YamahaVolume.php"  height=38px'),
 				),
+				c_Control_RemoteSource	=> array(
+					c_Property_Name 			=> 'Source Control',
+					c_Property_Names       		=> array('src="../user/Entertainment/Remote_YamahaEmpty.php" height=10px'),
+				),
 				c_Control_Muting 			=> array(
 					c_Property_Name 			=> 'Mute',
 					c_Property_CommMuteOn 		=> array(c_Comm_Yamaha, 'MUTE', 'ON'),
@@ -115,7 +119,7 @@
 				c_Control_Volume		=> array(
 					c_Property_Name				=> 'Volume',
 					c_Property_CommVol			=> array(c_Comm_Yamaha, 'VOL', c_Template_Value, 'ZONE2'),
-					c_Property_MinValue			=> -10,
+					c_Property_MinValue			=> -20,
 					c_Property_MaxValue			=> 10,
 				),
 				c_Control_Muting 			=> array(
@@ -129,7 +133,7 @@
 				c_Property_PowerDelay	=> c_Device_YamahaMain,
 				c_Control_RemoteSource	=> array(
 					c_Property_Name 			=> 'Source Control',
-					c_Property_Names       		=> array('src="../user/Entertainment/Remote_YamahaNetRadio.php"  height=110px'),
+					c_Property_Names       		=> array('src="../user/Entertainment/Remote_YamahaNetRadio.php" height=150px'),
 				),
 				c_Control_iRemoteSource 	=> array(
 					c_Property_Name 			=> 'iPhone Source Control',
@@ -137,11 +141,11 @@
 				),
 				c_Control_Program 	=> array(
 					c_Property_Name 			=> 'Program',
-					c_Property_CommPrg		=> array(c_Comm_Yamaha, 'yamahareceiver', c_Template_Code),
-					c_Property_CommPrgPrev	=> array(c_Comm_Yamaha, 'yamahareceiver', 'presetlast'),
-					c_Property_CommPrgNext	=> array(c_Comm_Yamaha, 'yamahareceiver', 'presetnext'),
-					c_Property_Codes			=> array('0', '1', '2', '3', '4', '5', '6', '7'),
-					c_Property_Names			=> array('Arabella','Antenne','Kronehit Radio','Radio Wien','Radio Noe','OE 3','88.6','Hit FM'),
+					c_Property_CommPrg			=> array(c_Comm_Yamaha, 'CHAN', c_Template_Code),
+					c_Property_CommPrgPrev		=> array(c_Comm_Yamaha, 'CHAN', 'prev'),
+					c_Property_CommPrgNext		=> array(c_Comm_Yamaha, 'CHAN', 'next'),
+					c_Property_Codes			=> array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'),
+					c_Property_Names			=> array('NDR2', 'Technobase FM', '104.6 RTL', 'The End 107.9FM', 'NRJ Berlin', 'Fritz','1.fm Top 40','KISS FM 102.7','Ambient Meditation Music','Calm Radio - Sleep','Nirvana Radio Relaxation','Chroma Radio Nature','Healing Music Radio'),
 				),
 			),
 			// -------------------------------------------------------------------------------------------------------
@@ -225,6 +229,18 @@
 					c_Property_Output	=> array(
 											c_Property_Device 	=> c_Device_SamsungTV,
 					),
+				),
+				4 	=> array(
+					c_Property_Name 	=> 'AppleSound',
+		 			c_Property_Switch	=> array(
+												array(
+													c_Property_Device 	=> c_Device_SubwooferBack,
+												),
+											),
+					c_Property_Output	=> array(
+												c_Property_Device 	=> c_Device_YamahaMain,
+												c_Property_CommSrc	=> array(c_Comm_Yamaha, array('INP' => ya_AV2, 'VOL' => -35))
+											),
 				),
 			),
 	      // -------------------------------------------------------------------------------------------------------

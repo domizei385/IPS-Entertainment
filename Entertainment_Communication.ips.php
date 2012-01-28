@@ -197,10 +197,10 @@
 		$FunctionName   = $CommConfig[$CommInterface][c_Property_FunctionSend];
 		$FunctionScript = $CommConfig[$CommInterface][c_Property_Script];
 		$FunctionParameters = array();
-		foreach ($CommParams as $CommIdx=>$CommParam) {
-			if ($CommParam==c_Template_Value) {
+		foreach ($CommParams as $CommIdx => $CommParam) {
+			if ($CommParam == c_Template_Value) {
 				$FunctionParameters[] = GetValue(get_ControlIdByDeviceName($DeviceName, $ControlType));
-			} else if ($CommParam==c_Template_Code) {
+			} else if ($CommParam == c_Template_Code) {
 				$DeviceConfig = get_DeviceConfiguration();
 				$Value = GetValue(get_ControlIdByDeviceName($DeviceName, $ControlType));
 				$FunctionParameters[] = $DeviceConfig[$DeviceName][$ControlType][c_Property_Codes][$Value];
@@ -254,6 +254,7 @@
 			}
 			
 			foreach($SourcesData as $SourceData) {
+				//IPSLogger_Wrn(__file__, "SourceData: ".print_r($SourceData, true));
 				$DeviceName = $SourceData[c_Property_Device];
 				if (array_key_exists(c_Property_CommSrc, $SourceData)) {
 					Entertainment_SendData($DeviceName, c_Control_Source, $SourceData[c_Property_CommSrc], c_Property_CommSrc);
